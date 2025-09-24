@@ -47,3 +47,140 @@ class Main {
         
     }
 }
+
+==============================================================================
+
+version 2:
+
+import java.util.*;
+
+class Hall {
+    
+    private String hallName;
+    private String contactNumber;
+    private double costPerDay;
+    private String ownerName;
+    
+    Hall() {
+        
+    }
+    Hall(String hallName,String contactNumber,double costPerDay,String ownerName) {
+        this.hallName = hallName;
+        this.contactNumber = contactNumber;
+        this.costPerDay = costPerDay;
+        this.ownerName = ownerName;
+    }
+
+    public String getHallName() {
+        return hallName;
+    }
+    public String getContactNumber() {
+        return contactNumber;
+    }
+    public double getCostPerDay() {
+        return costPerDay;
+    }
+    public String getOwnerName() {
+        return ownerName;
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        sc.nextLine();
+        ArrayList<Hall> hallList = new ArrayList<>();
+        
+        for(int i=0;i<n;i++) {
+            //read hall details as input
+            String name = sc.nextLine();
+            String contact = sc.next();
+            double cost = sc.nextDouble();
+            sc.nextLine();
+            String owner = sc.nextLine();
+            //create hall Object
+            Hall hall = new Hall(name,contact,cost,owner);
+            //add to the hallList
+            hallList.add(hall);
+        }
+        
+        for(Hall h: hallList) {
+            System.out.println(h.getHallName()+" "+h.getContactNumber()+" "+h.getCostPerDay()+" "+h.getOwnerName());
+        }
+        
+    }
+}
+
+==========================================================
+
+import java.util.*;
+
+class Hall {
+    
+    private String hallName;
+    private String contactNumber;
+    private double costPerDay;
+    private String ownerName;
+    
+    Hall() {
+        
+    }
+    Hall(String hallName,String contactNumber,double costPerDay,String ownerName) {
+        this.hallName = hallName;
+        this.contactNumber = contactNumber;
+        this.costPerDay = costPerDay;
+        this.ownerName = ownerName;
+    }
+
+    public String getHallName() {
+        return hallName;
+    }
+    public String getContactNumber() {
+        return contactNumber;
+    }
+    public double getCostPerDay() {
+        return costPerDay;
+    }
+    public String getOwnerName() {
+        return ownerName;
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        sc.nextLine();
+        ArrayList<Hall> hallList = new ArrayList<>();
+        
+        for(int i=0;i<n;i++) {
+            //read hall details as input
+            String name = sc.nextLine();
+            String contact = sc.next();
+            double cost = sc.nextDouble();
+            sc.nextLine();
+            String owner = sc.nextLine();
+            //create hall Object
+            Hall hall = new Hall(name,contact,cost,owner);
+            //add to the hallList
+            hallList.add(hall);
+        }
+        
+        if(hallList.isEmpty()) {
+            System.out.println("The list is empty");
+        }
+        
+        System.out.printf("%-20s%-20s%-20s%-20s\n","Name","Contact Number","CostperDay","Owner Name"); 
+        for(Hall h: hallList) {
+            // System.out.println(h.getHallName()+" "+h.getContactNumber()+" "+h.getCostPerDay()+" "+h.getOwnerName());
+        
+        System.out.printf("%-20s%-20s%-20s%-20s\n",h.getHallName(),h.getOwnerName(),h.getCostPerDay(),h.getOwnerName());
+            
+        }
+    }
+}
+
+====================================================

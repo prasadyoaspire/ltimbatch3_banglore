@@ -1,0 +1,113 @@
+import java.util.*;
+
+class ArrayListDemo {
+    
+    public static void main(String[] args) {
+        
+        ArrayList<String> courses = new ArrayList<>();
+        
+        courses.add("java");
+        courses.add("c++");
+        courses.add("sql");
+        courses.add(2,"maven"); //index based
+        courses.add("java"); // duplicate added
+     
+        System.out.println(courses);
+        
+        int size = courses.size();
+        System.out.println("Size: "+size);
+        
+        String inputCourseName = "sql";
+        
+        boolean isExisting = courses.contains(inputCourseName); 
+        
+        if(isExisting) {
+            System.out.println("course found");
+            courses.remove(inputCourseName); // remove object
+        }
+        else {
+             System.out.println("not found");
+        }
+        
+        System.out.println(courses);
+      
+    }
+}
+
+=====================================================================================
+
+import java.util.*;
+
+class SetDemo {
+    
+    public static void main(String[] args) {
+        
+        HashSet<String> courses = new HashSet<>(); // unordered and unsorted 
+        
+       // LinkedHashSet<String> courses = new LinkedHashSet<>();  // maintains insertion order
+       
+    //   TreeSet<String> courses = new TreeSet<>(); // sorted
+        
+        courses.add("java");
+        courses.add("c++");
+        courses.add("sql");
+        courses.add("maven");
+        courses.add("sql"); // dulicate adding
+         
+        
+        System.out.println(courses); //courses.toString()
+    }
+}
+
+=============================================
+
+import java.util.*;
+
+class ArrayListDemo {
+    
+    public static void main(String[] args) {
+        
+        ArrayList<String> courses = new ArrayList<>();
+        courses.add("java");
+        courses.add("c++");
+        courses.add("sql");
+        courses.add(2,"maven"); //index based
+        courses.add("java"); // duplicate added
+     
+        System.out.println(courses);
+        
+        System.out.println("Using for-each");
+        
+        for(String c: courses) {
+            System.out.println(c);
+        }
+        
+        System.out.println("Using Iterator");
+        
+        Iterator<String> i = courses.iterator();
+        while(i.hasNext()) {
+            String s = i.next();
+            System.out.println(s);
+        }
+        
+        ArrayList<Integer> nums = new ArrayList<>();
+        nums.add(10);
+        nums.add(20);
+        nums.add(30);
+        nums.add(40);
+        
+         System.out.println(nums);
+        
+        Iterator<Integer> i2 = nums.iterator();
+        while(i2.hasNext()) {
+            Integer n = i2.next();
+            if(n==30) {
+                i2.remove();
+                System.out.println("removed: "+n);
+            }
+            // System.out.println(n);
+        }
+        
+       System.out.println(nums);
+    }
+}
