@@ -1,0 +1,49 @@
+import java.util.*;
+
+class Hall {
+    
+    private String hallName;
+    private String contactNumber;
+    private double costPerDay;
+    private String ownerName;
+    
+    Hall() {
+        
+    }
+    Hall(String hallName,String contactNumber,double costPerDay,String ownerName) {
+        this.hallName = hallName;
+        this.contactNumber = contactNumber;
+        this.costPerDay = costPerDay;
+        this.ownerName = ownerName;
+    }
+
+    public String getHallName() {
+        return hallName;
+    }
+    public String getContactNumber() {
+        return contactNumber;
+    }
+    public double getCostPerDay() {
+        return costPerDay;
+    }
+    public String getOwnerName() {
+        return ownerName;
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        
+        ArrayList<Hall> hallList = new ArrayList<>();
+        
+        hallList.add(new Hall("JME", "9632587410", 50000, "Kiran"));
+        hallList.add(new Hall("GuestLine", "9632587410", 40000, "Kiran"));
+        hallList.add(new Hall("DomTree", "9632587410", 30000, "Kiran"));
+        hallList.add(new Hall("7Apple", "9632587410", 150000, "Rathod"));
+        
+        for(Hall h: hallList) {
+            System.out.println(h.getHallName()+" "+h.getContactNumber()+" "+h.getCostPerDay()+" "+h.getOwnerName());
+        }
+        
+    }
+}
