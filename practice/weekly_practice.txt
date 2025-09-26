@@ -1,0 +1,208 @@
+Q1) Student Marks Filter and Sort 
+
+Problem Statement:
+
+You are given a list of student marks in an ArrayList<Integer>.
+
+Your task is to: 
+
+	Read in student marks from the user. 
+	Remove all marks less than 40 (fail marks). 
+	Sort the remaining marks in ascending order.
+
+Display: 
+	The total number of passing students 
+	The highest and lowest mark 
+	The full sorted list
+
+Input Format:
+ 
+First line: 
+Integer n (number of marks) 
+
+Next n lines: 
+One integer each (student mark)
+
+Sample Input:
+ 6 
+35
+85 
+37 
+42 
+19 
+90
+
+Expected Output :
+
+Total passing students: 3
+Highest marks: 90
+Lowest marks: 42
+Filtered and Sorted Marks:
+42
+85
+90
+-----------------------------------------------------------------------------------------------------
+
+import java.util.*;
+
+class Main {
+    public static void main(String[] args) {
+        
+        //List to store students marks
+        ArrayList<Integer> marksList = new ArrayList();
+        
+        Scanner sc = new Scanner(System.in);
+        
+        //Read number of element (marks) to store in the list
+        int n = sc.nextInt();
+        
+        for(int i=0;i<n;i++) {
+            
+            //read each student marks
+            int m = sc.nextInt();
+            
+            //store it inside marksList
+            marksList.add(m);
+        }
+        
+        //Remove all marks less than 40 (fail marks). 
+        Iterator<Integer> itr = marksList.iterator();
+        while(itr.hasNext()) {
+            
+            //get the element from iterator Object
+            int k = itr.next();
+            
+            if(k<40) {
+                //remove element from arraylist using iterator Object
+                itr.remove();
+            }
+        }
+        
+        //Sort the remaining marks in ascending order.
+        Collections.sort(marksList); // to sort in desc : Collections.sort(marksList,Collections.reverseOrder());
+        
+        int size = marksList.size(); // list is already filtered and sorted
+        int highest = Collections.max(marksList);
+        int lowest = Collections.min(marksList);
+        
+        System.out.println("Total passing students: "+ size); 
+        System.out.println("Highest marks: "+ highest);
+        System.out.println("Lowest marks: "+ lowest);
+        
+        //Display the final list
+        System.out.println("Filtered and Sorted Marks:");
+        for(int i : marksList) {
+            System.out.println(i);
+        }
+    }
+}
+
+--------------------------------------------------------------------------------------------------------
+
+Sample Input:
+
+6 
+35
+85 
+37 
+42 
+19 
+90
+
+Sample Output
+
+Total passing students: 3
+Highest marks: 90
+Lowest marks: 42
+Filtered and Sorted Marks:
+42
+85
+90
+
+===================================================================================================================
+
+Question2:
+
+Q1) 
+
+Problem Statement: Update Value in an Integer List
+
+Problem Description:
+
+You are given a list of integers stored in an ArrayList<Integer>. 
+
+Your task is to write a Java program that:
+
+Displays the initial list.
+
+enter a value that exists in the list.
+
+enter a new value to replace the old one.
+
+Updates the first occurrence of the existing value with the new value.
+
+Displays the updated list.
+
+Sample input:
+5
+10
+20
+30
+40
+50
+40
+400
+
+Sample output:
+
+Original List: 
+[10, 20, 30, 40, 50]
+Updated List: 
+[10, 20, 30, 400, 50]
+
+------------------------------------------------------------------------------
+
+ import java.util.*;
+
+class Main {
+    
+    public static void main(String[] args) {
+        
+        Scanner sc = new Scanner(System.in);
+        
+        ArrayList<Integer> numbers = new ArrayList<>();
+        int n = sc.nextInt();
+        
+        for(int i=0;i<n;i++) {
+            
+            int element = sc.nextInt();
+            
+            numbers.add(element);
+        }
+        
+        //enter existing value
+        int oldValue = sc.nextInt();
+
+        //enter new value to update
+        int newValue = sc.nextInt();
+        
+        System.out.println("Original List: ");
+        System.out.println(numbers);
+        
+         // Check if value exists
+        if (!numbers.contains(oldValue)) {
+            System.out.println("Value not found in the ArrayList.");
+        }
+        else {
+            // Find the index of the old value and update it
+            int index = numbers.indexOf(oldValue);
+            numbers.set(index, newValue);
+            
+            System.out.println("Updated List: ");
+            System.out.println(numbers);
+        }
+        
+    }
+}
+
+

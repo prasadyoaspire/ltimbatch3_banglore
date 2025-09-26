@@ -1,0 +1,150 @@
+import java.util.*;
+
+class Main {
+    
+    public static void main(String[] args) {
+        
+        System.out.println("Main starts");
+        
+        Scanner sc = new Scanner(System.in);
+        
+        int a = sc.nextInt();
+        int b = sc.nextInt();
+        
+        int c = a/b;
+        System.out.println("Result: "+c);
+        
+        System.out.println("Main ends");
+    }
+}
+
+==============================================================
+
+import java.util.*;
+
+class Main {
+    
+    public static void main(String[] args) {        
+        System.out.println("Main starts");        
+        Scanner sc = new Scanner(System.in);
+        
+        int a = sc.nextInt();
+        int b = sc.nextInt();
+        
+        try {
+            
+            int c = a/b;
+            System.out.println("Result: "+c);
+        }
+        catch(ArithmeticException e) {
+            System.out.println("denominator should not be zero.");
+        }        
+        System.out.println("Main ends");
+    }
+}
+
+
+================================================
+
+//throw demo
+import java.util.*;
+
+class Test {
+    
+    void checkAge(int age) throws ArithmeticException {
+        
+        if(age < 18) {
+            ArithmeticException ex = new ArithmeticException(); // exception object creation
+            throw ex; // throwing exception
+        }
+        System.out.println("Eligible for Vote");
+    }
+}
+class Main {
+    public static void main(String[] args) {
+        System.out.println("Main starts...");
+        Scanner sc = new Scanner(System.in);
+        int age = sc.nextInt();
+        
+        Test test = new Test();
+        
+        try {
+             test.checkAge(age); 
+        }
+        catch(ArithmeticException e) {
+            System.out.println("Not eligible for Vote");
+        }
+        System.out.println("Main ends.");
+    }
+}
+
+===================================================================================
+
+//throw demo
+import java.util.*;
+
+class Test {
+    
+    void checkAge(int age) throws ClassNotFoundException {
+        
+        if(age < 18) {
+            // ArithmeticException ex = new ArithmeticException(); // Unchecked exception object creation
+            ClassNotFoundException ex = new ClassNotFoundException(); // checked exception 
+            throw ex; // throwing exception
+        }
+        System.out.println("Eligible for Vote");
+    }
+}
+class Main {
+    public static void main(String[] args) {
+        System.out.println("Main starts...");
+        Scanner sc = new Scanner(System.in);
+        int age = sc.nextInt();
+        
+        Test test = new Test();
+        
+        try {
+             test.checkAge(age); 
+        }
+        catch(ClassNotFoundException e) {
+            System.out.println("Not eligible for Vote");
+        }
+        System.out.println("Main ends.");
+    }
+}
+
+=============================================================
+
+//user defined exception 
+//user defined Exception
+import java.util.*;
+
+class Test {
+    void checkAge(int age) throws AgeLimitException {
+        if(age < 18) {
+            //throw user defined exception
+            AgeLimitException ae = new AgeLimitException("Not Eligible for Vote");
+            throw ae;
+        }
+        System.out.println("Eligible");
+    }
+}
+class AgeLimitException extends Exception {  // checked exception 
+    AgeLimitException(String msg) {
+        super(msg);
+    }
+}
+class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int inputAge = sc.nextInt();
+        Test t = new Test();
+        try {
+             t.checkAge(inputAge);
+        }
+        catch(AgeLimitException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}
+===========================================================================
