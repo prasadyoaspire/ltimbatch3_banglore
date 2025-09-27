@@ -1,0 +1,13 @@
+1.
+select name,  IFNULL(sum(distance),0) as travelled_distance from Users u 
+left join Rides r on u.id=r.user_id
+group by name order by travelled_distance desc,name;
+
+2.
+select show_name,from_year,to_year from shows s inner join genres g 
+on s.from_year=2010 and g.genre_name='action';
+
+3.
+# You are using MYSQL
+select product_name,year,price from Sales s join Product p 
+on s.product_id=p.product_id order by year;
