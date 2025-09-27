@@ -1,0 +1,106 @@
+
+program1:
+
+Create a Class called Book with the following attributes
+
+bookid  - int
+title   - String
+author  - String
+
+all attributes are private
+create all argument constructor
+For Each property create getter method.
+
+Create another class called Main 
+Inside Main class define main method.
+
+Your task is:
+
+  1. read input form keyboard
+
+  2. create an object using input values
+
+  3. Call getter methods to get the values 
+
+  4. display the results
+
+==================================================================================================
+
+  //creating class called book
+
+   class Book {
+
+     //attributes
+     private int bookId;
+     private String title;
+     private String author;
+
+     //all args constructor
+     Book(int bookId,String title,String author) {
+      this.bookId = bookId;
+      this.title = title;
+      this.author = author;
+     }
+  
+     //getter methods for all properties    
+     int getBookId() {
+       return bookId;
+     }    
+     String getTitle() {
+       return title;
+     }     
+     String getAuthor() {
+      return author;
+     }
+   
+  }
+
+  //create a Main class
+  class Main {
+    public static void main(String[] args) {
+
+      //1. read input form keyboard
+      Scanner sc = new Scanner();
+      int bookId = Integer.parseInt(sc.nextLine());
+      String bookTitle = sc.nextLine();
+      String bookAuthor = sc.nextLine();
+   
+      //2. create an object using input values     
+      Book book1 = new Book(bookId,bookTitle,bookAuthor);
+
+      //3. Call getter methods to get the values   
+      int id = book1.getBookId();
+      String title = book1.getTitle();
+      String author = book1.getAuthor();
+
+      //4. display the results
+      System.out.println("BookId:"+id);
+      System.out.println("Title:"+title);
+      System.out.println("Author:"+author);
+   }
+}
+
+Sample Input:
+
+1001
+Java In Action
+Jhon
+
+Sample Output:
+
+BookId: 1001
+Title: Java In Action
+Author: Jhon
+
+======================================================================================
+
+Program 2: (for Practice)
+
+Create a Class called Product with the following attributes
+
+id  - int
+name   - String
+price  - String
+
+// do the same operations as defined above
+     
