@@ -1,0 +1,519 @@
+1. Employee Payroll Calculation Application
+
+abstract class Employee {
+    private String firstName;
+    private String lastName;
+    private String aadharNumber;
+
+    // Constructor to initialize firstName, lastName, and aadharNumber
+    public Employee(String firstName, String lastName, String aadharNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.aadharNumber = aadharNumber;
+    }
+
+    // Getters and Setters
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getAadharNumber() {
+        return aadharNumber;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setAadharNumber(String aadharNumber) {
+        this.aadharNumber = aadharNumber;
+    }
+
+    // Abstract method earnings to be implemented by subclasses
+    public abstract double earnings();
+
+    // Method to display employee details (to be overridden)
+    public String details() {
+        return "aadharNumber: " + aadharNumber;
+    }
+}
+
+class SalariedEmployee extends Employee {
+    private double weeklySalary;
+
+    public SalariedEmployee(String firstName, String lastName, String aadharNumber, double weeklySalary) {
+        super(firstName, lastName, aadharNumber);
+        this.weeklySalary = weeklySalary;
+    }
+
+    public double getWeeklySalary() {
+        return weeklySalary;
+    }
+
+    public void setWeeklySalary(double weeklySalary) {
+        this.weeklySalary = weeklySalary;
+    }
+
+    @Override
+    public double earnings() {
+        return getWeeklySalary();
+    }
+
+    @Override
+    public String details() {
+        return String.format("aadharNumber: %s\nweekly salary: $%.2f", getAadharNumber(), getWeeklySalary());
+    }
+}
+
+class HourlyEmployee extends Employee {
+    private double wage;
+    private double hours;
+
+    public HourlyEmployee(String firstName, String lastName, String aadharNumber, double wage, double hours) {
+        super(firstName, lastName, aadharNumber);
+        this.wage = wage;
+        this.hours = hours;
+    }
+
+    public double getWage() {
+        return wage;
+    }
+
+    public void setWage(double wage) {
+        if (wage >= 0) {
+            this.wage = wage;
+        }
+    }
+
+    public double getHours() {
+        return hours;
+    }
+
+    public void setHours(double hours) {
+        if (hours >= 0 && hours <= 168) {
+            this.hours = hours;
+        }
+    }
+
+    @Override
+    public double earnings() {
+        if (hours <= 40) {
+            return wage * hours;
+        } else {
+            return 40 * wage + (hours - 40) * wage * 1.5;
+        }
+    }
+
+    @Override
+    public String details() {
+        return String.format("aadharNumber: %s\nhourly wage: $%.2f; hours worked: %.2f", getAadharNumber(), getWage(), getHours());
+    }
+}
+
+class CommissionEmployee extends Employee {
+    private double grossSales;
+    private double commissionRate;
+
+    public CommissionEmployee(String firstName, String lastName, String aadharNumber, double grossSales, double commissionRate) {
+        super(firstName, lastName, aadharNumber);
+        this.grossSales = grossSales;
+        this.commissionRate = commissionRate;
+    }
+
+    public double getGrossSales() {
+        return grossSales;
+    }
+
+    public void setGrossSales(double grossSales) {
+        this.grossSales = grossSales;
+    }
+
+    public double getCommissionRate() {
+        return commissionRate;
+    }
+
+    public void setCommissionRate(double commissionRate) {
+        this.commissionRate = commissionRate;
+    }
+
+    @Override
+    public double earnings() {
+        return grossSales * commissionRate;
+    }
+
+    @Override
+    public String details() {
+        return String.format("aadharNumber: %s\ngross sales: $%,.2f; commission rate: %.2f",
+                getAadharNumber(), getGrossSales(), getCommissionRate());
+    }
+}
+
+class BasePlusCommissionEmployee extends CommissionEmployee {
+    private double baseSalary;
+
+    public BasePlusCommissionEmployee(String firstName, String lastName, String aadharNumber,
+                                      double grossSales, double commissionRate, double baseSalary) {
+        super(firstName, lastName, aadharNumber, grossSales, commissionRate);
+        this.baseSalary = baseSalary;
+    }
+
+    public double getBaseSalary() {
+        return baseSalary;
+    }
+
+    public void setBaseSalary(double baseSalary) {
+        this.baseSalary = baseSalary;
+    }
+
+    @Override
+    public double earnings() {
+        return super.earnings() + baseSalary;
+    }
+
+    public void increaseBaseSalaryBy10Percent() {
+        this.baseSalary += this.baseSalary * 0.10;
+    }
+
+    @Override
+    public String details() {
+        return String.format("aadharNumber: %s\ngross sales: $%,.2f; commission rate: %.2f; base salary: $%.2f",
+                getAadharNumber(), getGrossSales(), getCommissionRate(), getBaseSalary());
+    }
+}
+
+class PayrollSystem {
+    public static void main(String[] args) {
+        // Create employee objects
+        Employee[] employees = new Employee[]{
+                new SalariedEmployee("John", "Smith", "111-11-1111", 800.00),
+                new HourlyEmployee("Karen", "Price", "222-22-2222", 16.75, 40),
+                new CommissionEmployee("Sue", "Jones", "333-33-3333", 10000.00, 0.06),
+                new BasePlusCommissionEmployee("Bob", "Lewis", "444-44-4444", 5000.00, 0.04, 300.00)
+        };
+
+        // Display details and earnings for all employees
+        for (Employee employee : employees) {
+            String text = "";
+            if (employee instanceof BasePlusCommissionEmployee) {
+                text = "base-salaried commission";
+            } else if (employee instanceof SalariedEmployee) {
+                text = "salaried";
+            } else if (employee instanceof HourlyEmployee) {
+                text = "hourly";
+            } else if (employee instanceof CommissionEmployee) {
+                text = "commission";
+            }
+            System.out.println(text + " employee: " + employee.getFirstName() + " " + employee.getLastName());
+            System.out.println(employee.details());
+            System.out.println("earned $" + String.format("%.2f", employee.earnings()) + "\n");
+        }
+
+        // Increase base salary of BasePlusCommissionEmployee by 10%
+        for (Employee employee : employees) {
+            if (employee instanceof BasePlusCommissionEmployee) {
+                BasePlusCommissionEmployee baseEmployee = (BasePlusCommissionEmployee) employee;
+                baseEmployee.increaseBaseSalaryBy10Percent();
+                System.out.println("new base salary with 10% increase is: $" + String.format("%.2f", baseEmployee.getBaseSalary()));
+                System.out.println("earned $" + String.format("%.2f", baseEmployee.earnings()) + "\n");
+            }
+        }
+    }
+}
+
+==========================================================
+2.Movie Rating Classification
+
+import java.util.Scanner;
+
+class MovieRater {
+    int year;
+    String title;
+    float rating;
+
+    // Default constructor
+    public MovieRater() {
+        year = 0;
+        title = "";
+        rating = 0.0f;
+    }
+
+    // Method to accept inputs
+    public void accept() {
+        Scanner sc = new Scanner(System.in);
+        year = Integer.parseInt(sc.nextLine().trim());
+        title = sc.nextLine().trim();
+        rating = Float.parseFloat(sc.nextLine().trim());
+        // Do not close scanner here if using system.in elsewhere
+    }
+
+    // Method to display output based on rating
+    public void display() {
+        System.out.println(title);
+        if (rating < 0.0f || rating > 5.0f) {
+            System.out.println("Rating should be between 0.0 and 5.0");
+            return;
+        }
+
+        if (rating >= 0.0f && rating <= 2.0f) {
+            System.out.println("Flop");
+        } else if (rating > 2.0f && rating <= 3.4f) {
+            System.out.println("Semi-hit");
+        } else if (rating > 3.4f && rating <= 4.5f) {
+            System.out.println("Hit");
+        } else if (rating > 4.5f && rating <= 5.0f) {
+            System.out.println("Super Hit");
+        }
+    }
+
+    // Main method to run the program
+    public static void main(String[] args) {
+        MovieRater mr = new MovieRater();
+        mr.accept();
+        mr.display();
+    }
+}
+
+==========================================================
+3. Summing Numbers from a String with Exception Handling
+
+
+import java.util.Scanner;
+
+class CalculatorTest {
+
+    // Add function to parse and sum integers from string
+    public static int add(String input) {
+        String[] tokens = input.trim().split(" ");
+        int sum = 0;
+
+        try {
+            for (String token : tokens) {
+                if (!token.isEmpty()) {
+                    int number = Integer.parseInt(token);
+                    sum += number;
+                }
+            }
+            return sum;
+        } catch (NumberFormatException e) {
+            // Any non-integer token causes entire sum to be invalid
+            System.out.println("The string doesn't have a number");
+            return 0;
+        }
+    }
+
+    // Main method to read input and call add()
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String input = sc.nextLine();
+        int result = add(input);
+        System.out.println(result);
+        sc.close();
+    }
+}
+
+
+
+=======================================================
+4. Weekly Pay Calculator 
+
+import java.util.Scanner;
+
+class PSGTech {
+    int employeeId;
+    String employeeName;
+    String designation;
+    int pay = -1; // Set initial invalid state
+
+    // Method to input employee details
+    void getEmployee() {
+        Scanner sc = new Scanner(System.in);
+        employeeId = Integer.parseInt(sc.nextLine());
+        employeeName = sc.nextLine();
+        designation = sc.nextLine();
+        int basePay = Integer.parseInt(sc.nextLine());
+        int hoursWorked = Integer.parseInt(sc.nextLine());
+        calculatePay(basePay, hoursWorked);
+    }
+
+    // Method to calculate pay
+    int calculatePay(int basePay, int hoursWorked) {
+        if (basePay < 400) {
+            System.out.println("Minimum base pay is Rs.400");
+            return -1;
+        }
+
+        if (hoursWorked > 60) {
+            // Show employee info and warning only once
+            System.out.println(employeeId);
+            System.out.println(employeeName);
+            System.out.println(designation);
+            System.out.println("Employees shouldn't work more than 60 hours in a week");
+            pay = -1; // Mark as invalid
+            return -1;
+        }
+
+        if (hoursWorked <= 40) {
+            pay = basePay * hoursWorked;
+        } else {
+            int overtimeHours = hoursWorked - 40;
+            pay = (basePay * 40) + (int)(overtimeHours * basePay * 1.5);
+        }
+
+        return pay;
+    }
+
+    // Only show if pay is valid
+    void showEmployee() {
+        if (pay != -1) {
+            System.out.println(employeeId);
+            System.out.println(employeeName);
+            System.out.println(designation);
+            System.out.println(pay);
+        }
+    }
+
+    public static void main(String[] args) {
+        PSGTech emp = new PSGTech();
+        emp.getEmployee();
+        emp.showEmployee();
+    }
+}
+
+==============================================
+
+5. Date Formatting and Validation
+
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.DateTimeException;
+import java.util.Scanner;
+
+public class Main {
+
+    // Convert month name to Month enum
+    private static Month getMonthFromString(String monthName) {
+        try {
+            return Month.valueOf(monthName.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return Month.JANUARY; // default to January
+        }
+    }
+
+    // Validate year range (1900 - 2100), else return default 2020
+    private static int validateYear(int year) {
+        return (year >= 1900 && year <= 2100) ? year : 2020;
+    }
+
+    // Create a LocalDate, default to day = 1 if invalid day for that month
+    private static LocalDate createValidDate(int year, int month, int day) {
+        try {
+            return LocalDate.of(year, month, day);
+        } catch (DateTimeException e) {
+            return LocalDate.of(year, month, 1);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        boolean validChoice = true;
+        LocalDate date = null;
+
+        try {
+            int choice = Integer.parseInt(scanner.nextLine().trim());
+            String inputDate = scanner.nextLine().trim();
+
+            switch (choice) {
+                case 1: {
+                    // Format: MM/DD/YYYY
+                    String[] parts = inputDate.split("/");
+                    if (parts.length != 3) {
+                        throw new IllegalArgumentException();
+                    }
+
+                    int month = Integer.parseInt(parts[0].trim());
+                    int day = Integer.parseInt(parts[1].trim());
+                    int year = validateYear(Integer.parseInt(parts[2].trim()));
+
+                    month = (month >= 1 && month <= 12) ? month : 1;
+                    date = createValidDate(year, month, day);
+                    break;
+                }
+
+                case 2: {
+                    // Format: MonthName DD, YYYY
+                    inputDate = inputDate.replaceAll(" +", " ").trim(); // Remove extra spaces
+                    String[] parts = inputDate.split(" ");
+                    if (parts.length != 3) {
+                        throw new IllegalArgumentException();
+                    }
+
+                    String monthName = parts[0].trim();
+                    int day = Integer.parseInt(parts[1].replace(",", "").trim());
+                    int year = validateYear(Integer.parseInt(parts[2].trim()));
+
+                    Month monthEnum = getMonthFromString(monthName);
+                    date = createValidDate(year, monthEnum.getValue(), day);
+                    break;
+                }
+
+                case 3: {
+                    // Format: DDD YYYY
+                    String[] parts = inputDate.split(" ");
+                    if (parts.length != 2) {
+                        throw new IllegalArgumentException();
+                    }
+
+                    int dayOfYear = Integer.parseInt(parts[0].trim());
+                    int year = validateYear(Integer.parseInt(parts[1].trim()));
+
+                    int maxDay = LocalDate.of(year, 12, 31).getDayOfYear();
+                    if (dayOfYear < 1 || dayOfYear > maxDay) {
+                        dayOfYear = 1;
+                    }
+
+                    date = LocalDate.ofYearDay(year, dayOfYear);
+                    break;
+                }
+
+                default:
+                    validChoice = false;
+                    System.out.println("Invalid Choice! System Exits!!! Please choose option between 1 to 3");
+            }
+
+        } catch (Exception e) {
+            validChoice = false;
+            System.out.println("Invalid Choice! System Exits!!! Please choose option between 1 to 3");
+        }
+
+        if (validChoice && date != null) {
+            System.out.println(getMMDDYYYYFormat(date));
+            System.out.println(getDDYYYYFormat(date));
+            System.out.println(getMonthDDYYYYFormat(date));
+        }
+
+        scanner.close();
+    }
+
+    private static String getMMDDYYYYFormat(LocalDate date) {
+        return date.format(DateTimeFormatter.ofPattern("M/d/yyyy"));
+    }
+
+    private static String getDDYYYYFormat(LocalDate date) {
+        return date.getDayOfYear() + " " + date.getYear();
+    }
+
+    private static String getMonthDDYYYYFormat(LocalDate date) {
+        return date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy"));
+    }
+}
+
+===================================================
