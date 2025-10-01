@@ -40,7 +40,7 @@ public class HotelDAOImpl implements HotelDAO {
     }
 
     //********************** Day 2 ******************************************/
-    
+
     @Override
     public void createHotel(Hotel hotel) {
         Connection con = JDBCUtils.createDBConnection();
@@ -51,7 +51,7 @@ public class HotelDAOImpl implements HotelDAO {
             ps.setString(2, hotel.getHotelName());
             ps.setString(3, hotel.getHotelLocation());
             ps.setFloat(4, hotel.getHotelRanking());
-            ps.setBoolean(4, hotel.isGymAvailable());
+            ps.setBoolean(5, hotel.isGymAvailable());
             ps.setBoolean(6, hotel.isPoolAvailable());
             ps.setBoolean(7, hotel.isSpaAvailable());
             ps.executeUpdate();
