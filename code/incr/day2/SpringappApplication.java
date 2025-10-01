@@ -1,9 +1,18 @@
 package com.examly.springapp;
 
+
 import java.util.Scanner;
 
-public class HotelApp {
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+
+@SpringBootApplication
+public class SpringappApplication {
+
     public static void main(String[] args) {
+        SpringApplication.run(SpringappApplication.class, args);
+
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
         switch (choice) {
@@ -27,4 +36,5 @@ public class HotelApp {
         }
         scanner.close();
     }
+    // Rest of the methods for sorting and displaying data
 }
