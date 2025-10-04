@@ -1,0 +1,67 @@
+document.getElementById('hotelForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    addHotel();
+  });
+  
+function addHotel() {
+    const name = document.getElementById('hotelName').value;
+    const location = document.getElementById('location').value;
+    const rating = document.getElementById('rating').value.charAt(0);
+    const pool = document.getElementById('pool').checked ? 'Yes' : 'No';
+    const gym = document.getElementById('gym').checked ? 'Yes' : 'No';
+    const spa = document.getElementById('spa').checked ? 'Yes' : 'No';
+  
+    if (!name || !location) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+  
+    const table = document.getElementById('hotelList');
+    const newRow = table.insertRow();
+  
+    newRow.innerHTML = `
+      <td>${name}</td>
+      <td>${location}</td>
+      <td>${rating}</td>
+      <td>${pool}</td>
+      <td>${gym}</td>
+      <td>${spa}</td>
+    `;
+
+    document.getElementById('hotelForm').reset();
+    
+  }
+  document.getElementById('hotelForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    addHotel();
+  });
+  
+function addHotel() {
+    const name = document.getElementById('hotelName').value;
+    const location = document.getElementById('location').value;
+    const rating = document.getElementById('rating').value.charAt(0);
+    const pool = document.getElementById('pool').checked ? 'Yes' : 'No';
+    const gym = document.getElementById('gym').checked ? 'Yes' : 'No';
+    const spa = document.getElementById('spa').checked ? 'Yes' : 'No';
+  
+    if (!name || !location) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+  
+    const table = document.getElementById('hotelList');
+    const newRow = table.insertRow();
+  
+    newRow.innerHTML = `
+      <td>${name}</td>
+      <td>${location}</td>
+      <td>${rating}</td>
+      <td>${pool}</td>
+      <td>${gym}</td>
+      <td>${spa}</td>
+    `;
+
+    document.getElementById('hotelForm').reset();
+    
+  }
+  
