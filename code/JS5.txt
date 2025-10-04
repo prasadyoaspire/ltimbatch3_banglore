@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tip Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <form id="tipForm">
+          <label for="billAmount">Bill Amount</label>
+          <input type="number" id="billAmount" />
+    
+          <label for="tipPercentage">Tip Percentage</label>
+          <select id="tipPercentage">
+            <option value="5">5%</option>
+            <option value="10">10%</option>
+            <option value="15">15%</option>
+            <option value="20">20%</option>
+          </select>
+    
+          <button type="button" onclick="calculateTip()">Calculate Tip</button>
+        </form>
+    
+        <p>Tip Amount: <span id="tipAmount">0.00</span></p>
+        <p>Total Amount: <span id="totalAmount">0.00</span></p>
+      </div>
+    
+      <script src="script.js"></script>
+</body>
+</html>
+
+======================================================================
+
+function calculateTip() {
+    const bill = parseFloat(document.getElementById("billAmount").value);
+    const tipPercent = parseFloat(document.getElementById("tipPercentage").value);
+  
+    if (isNaN(bill) || isNaN(tipPercent)) {
+      alert("Please enter valid values.");
+      return;
+    }
+  
+    const tip = (bill * tipPercent) / 100;
+    const total = bill + tip;
+  
+    document.getElementById("tipAmount").innerText = tip.toFixed(2);
+    document.getElementById("totalAmount").innerText = total.toFixed(2);
+  }
+  
+
+================================================================
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    padding: 20px;
+  }
+  
+  .container {
+    background-color: rgb(255, 255, 255); /* Required */
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 400px;
+    margin: auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  label {
+    display: block;
+    margin-top: 10px;
+  }
+  
+  input, select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    box-sizing: border-box;
+  }
+  
+  button {
+    margin-top: 15px;
+    padding: 10px;
+    width: 100%;
+    background-color: rgb(76, 175, 80); /* Required */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
