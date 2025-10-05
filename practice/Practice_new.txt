@@ -1,0 +1,409 @@
+===============================================================================
+Question 1:
+===============================================================================
+
+Payment Gateway Interface
+
+You are building a system that processes different types of payments.
+Create an interface named PaymentGateway with a method void processPayment(double amount).
+Implement this interface for two payment types: CreditCardPayment and PayPalPayment.
+Take user input for the payment amount and simulate processing the payment using both methods.
+
+Input format :
+The input consists of a double which represents the amount.
+Output format :
+The output displays the simulated processing of payment using both drone CreditCard and PayPal. The amount will be rounded to two decimal places.
+
+Refer to the sample output for formatting specifications.
+
+Sample test cases :
+
+Input 1 :
+500
+
+Output 1 :
+Processing credit card payment of:  $500.00
+Credit Card payment processed successfully!
+
+Processing Paypal payment of:  $500.00
+Paypal payment processed successfully!
+
+=============================================================================
+
+Question2:
+=============================================================================
+
+Notification System Interface
+
+Create an interface named NotificationService with a method sendNotification().
+Implement this interface for two types of notifications: EmailNotification and SMSNotification.
+Ask the user to input a message and simulate sending it using both methods.
+
+==============================================================================
+Question3:
+===============================================================================
+ class Word:
+    data members: 
+        int number
+        String st
+    Word(int number, String st): constructor with public visibility
+
+class Vowels:
+ method definitions:
+     checkWord(Word word) throws Exception:     
+        return type: String    
+
+     finalizeWord(Word word) throws Exception:
+        return type: String  
+
+ class VowelException: create userdefined exception
+
+  
+ method implementations:
+
+ String checkWord(Word word):
+
+  Write a code to validate the criteria for the word.
+  - throw a VowelException if the number is greater than 5 with the message "Vowels limit exceeded".
+   - throw a VowelException if the string doesn't contain the number of vowels equal to the number variable with the message "Number mismatched"
+   - if no above exception is found then return a string message "Can be finalized"
+
+- String finalizedWord(Word word) :
+
+  - Write a code to send an invite to the nominee,
+  - If checkWord() method throws a VowelException then returns a message "Failed". (Using try-catch block).
+   - If it throws any other exception then return a message "Other exception"
+   - If no exception is found then return a message "Successful"
+
+One of the Sample Input:
+
+   Word w = new Word(2,"AOPLK");
+   Vowels v = new Vowles();
+
+   String s = v.checkWord(w);
+
+ Sample output:
+
+     Can be finalized
+
+===============================================================================
+Question4: Update All Occurrences of a String in a List
+===============================================================================
+
+  Sample Input-1:
+
+  5
+  apple
+  banana
+  cherry
+  banana
+  mango
+  banana --> value to update
+  orange --> new value
+
+  Sample output-1:
+
+  Original ArrayList: 
+  [apple, banana, cherry, banana, mango]
+  
+  Updated ArrayList: 
+  [apple, orange, cherry, orange, mango]
+
+----------------------------------------
+ 
+  Sample Input-2:
+
+  5
+  apple
+  banana
+  cherry
+  banana
+  mango
+  orange --> value to update
+  pineapple --> new value
+
+  Sample output-3:
+
+  Original ArrayList: 
+  [apple, banana, cherry, banana, mango]
+  
+  Updated ArrayList: 
+  orange not found in the ArrayList.
+
+
+==============================================================================
+Question 5:
+==============================================================================
+
+Problem Statement:
+
+You are creating an event scheduling application that allows users to input upcoming events and their scheduled start times. The app should sort and display the events in order of their start time.
+
+Input format:
+
+For each event:
+
+Enter the event name (String).
+
+Enter the event start time in 24-hour format (Integer between 0 and 23).
+
+To end input, type "Done".
+
+Output format:
+
+Display the sorted list of events in ascending order of start times.
+
+Each line should contain: <Event Name> - <Start Time>
+
+----------------------------------------------------------------------------------
+
+import java.util.*;
+import java.sql.*;
+
+//Event class
+class Event {
+    String name;
+    int startTime;
+    
+    Event(String name,int startTime) {
+        this.name = name;
+        this.startTime = startTime;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    public int getStartTime() {
+        return startTime;
+    }
+    public String toString() {
+	return "Event Name: "+name+", Start Time: "+startTime;
+    }
+
+}
+
+//Main class
+class Main {
+    
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        //create arralist to store event objects
+        ArrayList<Event> eventList = new ArrayList<>();
+        
+        //read the inputs until user enters "Completed" text
+        while(true) {
+            String name = sc.nextLine();
+            if(name.equals("Done")) {
+                break;
+            }
+            else {
+                 int startTime = Integer.parseInt(sc.nextLine());
+                 
+                // condition check : startTime should be between 0 to 23 hours 
+                if(startTime >=0 && startTime <=23) {
+                    
+                    //create event Object
+                    Event event = new Event(name,startTime);
+                
+                    //add to event list
+                    eventList.add(event);
+                }
+            }
+        }
+        
+        //sort the Objects in eventList using comparator
+        Collections.sort(eventList,new StartTimeComarator());
+        
+        //display the result
+        System.out.println("Events by Importance:");
+        for(Event e:eventList) {
+            // System.out.println("Event Name: "+e.getName()+", Start Time: "+e.getStartTime());
+            System.out.println(e);
+        }
+        
+        sc.close();
+    }
+}
+
+//Compartor class to sort the objects in ascending order of startTime.
+class StartTimeComarator implements Comparator<Event> {
+
+    public int compare(Event e1, Event e2) {
+        return Integer.compare(e1.getStartTime(), e2.getStartTime()); // for ascending order
+       
+    }
+} 
+
+----------------------------------------------------------------------------------------
+sample input:
+
+Team Meeting
+14
+Doctor Appointment
+9
+Project Presentation
+11
+Lunch with Client
+12
+Done
+
+Sample output:
+
+Events by Importance:
+Event Name: Doctor Appointment, Start Time: 9
+Event Name: Project Presentation, Start Time: 11
+Event Name: Lunch with Client, Start Time: 12
+Event Name: Team Meeting, Start Time: 14
+
+=======================================================================================
+Question 6 : for practice
+===============================================================================
+
+Patient Check-in System using ArrayList
+
+Problem Statement:
+
+Design a patient check-in system for a clinic that stores patients based on their urgency level. The urgency level determines how quickly the patient should be seen by a doctor.
+
+Input format:
+
+For each patient:
+
+Enter the patient name (String).
+
+Enter the urgency level (Integer between 1 and 5, where 1 is most urgent).
+
+Stop input when "Exit" is entered.
+
+Output format:
+
+Display patients sorted by urgency level in ascending order.
+
+Format: <Patient Name> - Urgency Level: <level>
+
+Your task is:
+
+same as above code.
+
+===============================================================================
+Question 7: Unique Book Catalog
+===============================================================================
+
+Problem Statement:
+Create a program that maintains a catalog of unique books using a HashSet. 
+Each Book has the following attributes
+int bookid
+String title
+String author
+
+You must:
+Allow the user to add a list of books.
+Prevent duplicate books from being added. Two books are considered duplicates if their bookid is the same
+Display all the unique books at the end.
+
+---------------------------------------------------------------------------------------------
+Sample Input:
+
+4
+101
+Java Basics
+Arun
+102
+Spring Boot
+Priya
+101
+Java DS
+Vibhav
+103
+Sql
+Kiran
+
+Expected Output:
+
+Book added successfully.
+Book added successfully.
+Duplicate book found with ID: 101
+Book added successfully.
+
+Unique Books in Catalog:
+
+ID: 101 | Title: Java Basics | Author: Arun
+ID: 102 | Title: Spring Boot | Author: Priya
+ID: 103 | Title: Angular | Author: Ravi
+
+--------------------------------------------------------------------------------------------------
+
+import java.util.*;
+
+class Book {
+    int id;
+    String title;
+    String author;
+    
+    Book(int id,String title,String author) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+    }
+    public int getId() {
+        return id;
+    }
+    public String getTitle() {
+        return title;
+    }
+    public String getAuthor() {
+        return author;
+    }
+    public String toString() {
+        return "ID: "+id+" | Title: "+title+" | Author: "+author;
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        
+       //HashSet to store Books
+        HashSet<Book> books = new HashSet(); 
+        
+        Scanner sc = new Scanner(System.in);
+        
+        //Read number of elements to store
+        int n = Integer.parseInt(sc.nextLine());
+        
+        for(int i=0;i<n;i++) {
+            
+            //read each book details
+            int id = Integer.parseInt(sc.nextLine());
+            String title = sc.nextLine();
+            String author = sc.nextLine();
+            
+            //create new book object
+            Book newBook = new Book(id,title,author);
+            
+            //before adding new book object, check the set, book is already existing with this id or not
+            boolean duplicate = false;
+                
+            for(Book eb : books) {
+                if (eb.getId() == id) {
+                    System.out.println("Duplicate book found with ID: " + id);
+                    duplicate = true;
+                    break;
+                }
+            }
+                
+            //if book is not existing in the set, then only add newBook to set.    
+            if(duplicate == false) {
+                books.add(newBook);
+                System.out.println("Book added successfully.");
+            }
+        }
+        
+        //Display
+        System.out.println("Unique Books in Catalog:");
+
+        for(Book b : books) {
+            System.out.println(b);
+        }
+    }
+}
