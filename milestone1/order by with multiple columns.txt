@@ -1,0 +1,42 @@
+
+
+SQL query example using ORDER BY with multiple columns:
+
+Employee Table:
+
+
+| id | first_name | last_name | department | salary |
+| -- | ---------- | --------- | ---------- | ------ |
+| 1  | Alice      | Smith     | HR         | 50000  |
+| 2  | Bob        | Johnson   | IT         | 75000  |
+| 3  | Carol      | Lee       | IT         | 80000  |
+| 4  | David      | Kim       | HR         | 55000  |
+| 5  | Eva        | Brown     | Marketing  | 60000  |
+
+
+SELECT first_name, last_name, department, salary
+FROM employees
+ORDER BY department ASC, salary DESC;
+
+
+| first_name | last_name | department | salary |
+| ---------- | --------- | ---------- | ------ |
+| David      | Kim       | HR         | 55000  |
+| Alice      | Smith     | HR         | 50000  |
+| Carol      | Lee       | IT         | 80000  |
+| Bob        | Johnson   | IT         | 75000  |
+| Eva        | Brown     | Marketing  | 60000  |
+
+
+
+This query selects employee data.
+
+The results are first sorted by department in ascending order (A–Z).
+
+Within each department, results are then sorted by salary in descending order (highest to lowest).
+
+
+
+
+
+
