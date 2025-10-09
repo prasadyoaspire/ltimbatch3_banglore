@@ -1,0 +1,150 @@
+import java.util.*;
+
+class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        //no of entries to add to the map
+        int n = Integer.parseInt(sc.nextLine());
+
+        HashMap<String,Student> map = new HashMap<>();
+
+        for(int i=0;i<n;i++) {
+            int id = Integer.parseInt(sc.nextLine());
+            String name = sc.nextLine();
+            int marks = Integer.parseInt(sc.nextLine());
+            //create student object with input values
+            Student stu = new Student(id,name,marks);
+            //put inside map with studentName as a key and student object as a value
+            map.put(name,stu);
+            System.out.println("Added Successfully.");
+        }
+
+        //1 - Search
+
+        //read student name as input for searching
+        String inputName1 = sc.nextLine();
+
+        //check name is existing inside the map as key
+        if(map.containsKey(inputName1)) {
+            System.out.println("Student existing.");
+        }
+        else {
+            System.out.println("Student Name not found inside map");
+        }
+
+        //2- update marks
+
+        //read key - student name
+        String inputName2 = sc.nextLine();
+
+        //read new marks to update
+        int newMarks = Integer.parseInt(sc.nextLine());
+
+        //if key existing in the map then update it
+        if(map.containsKey(inputName2)) {
+           //get the value associated with this key
+            Student stObj = map.get(inputName2);
+            stObj.setTotalMarks(newMarks); //calling setter method to update marks in student object
+            System.out.println("Updated Successfully.");
+        }
+        else {
+            System.out.println("Student Name not found.");
+        }
+
+        //3 - Delete
+
+        String inputName3 = sc.nextLine();
+
+        //if key existing in the map then delete it
+        if(map.containsKey(inputName2)) {
+            //remove by its key
+            map.remove(inputName3);
+            System.out.println("Deleted Successfully.");
+        }
+        else {
+            System.out.println("Student Name not found.");
+        }
+
+        //4 - Display all
+
+        //get all keys from map
+        Set<String> allKeys = map.keySet();
+        //for each key get the value
+        for(String k : allKeys) {
+            Student st = map.get(k); //this method takes key as argument and return the value
+            System.out.println(k+" = "+st);
+        }
+    }
+}
+
+class Student {
+    private int studentId;
+    private String studentName;
+    private  int totalMarks;
+
+    Student() {
+
+    }
+    Student(int studentId, String studentName, int totalMarks) {
+        this.studentId = studentId;
+        this.studentName = studentName;
+        this.totalMarks = totalMarks;
+    }
+    public int getStudentId() {
+        return studentId;
+    }
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
+    }
+    public String getStudentName() {
+        return studentName;
+    }
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+    public int getTotalMarks() {
+        return totalMarks;
+    }
+    public void setTotalMarks(int totalMarks) {
+        this.totalMarks = totalMarks;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{ studentId="+studentId+", studentName= '"+studentName+"', totalMarks=" +totalMarks+"}";
+    }
+}
+
+
+Sample Input:
+
+4
+10
+charan
+65
+20
+kiran
+70
+30
+sameer
+76
+40
+kavya
+89
+sameer
+kiran
+75
+kavya
+
+Sample Output:
+
+Added Successfully.
+Added Successfully.
+Added Successfully.
+Added Successfully.
+Student existing.
+Updated Successfully.
+Deleted Successfully.
+charan = Student{ studentId=10, studentName= 'charan', totalMarks=65}
+kiran = Student{ studentId=20, studentName= 'kiran', totalMarks=75}
+sameer = Student{ studentId=30, studentName= 'sameer', totalMarks=76}
