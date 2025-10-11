@@ -1,7 +1,10 @@
+package com.abc.springcore.practice;
+
 import java.util.*;
 
-class Main {
+public class Demo1 {
     public static void main(String[] args) {
+
         Scanner sc = new Scanner(System.in);
         //no of entries to add to the map
         int n = Integer.parseInt(sc.nextLine());
@@ -85,66 +88,43 @@ class Student {
     Student() {
 
     }
+
     Student(int studentId, String studentName, int totalMarks) {
         this.studentId = studentId;
         this.studentName = studentName;
         this.totalMarks = totalMarks;
     }
+
     public int getStudentId() {
         return studentId;
     }
+
     public void setStudentId(int studentId) {
         this.studentId = studentId;
     }
+
     public String getStudentName() {
         return studentName;
     }
+
     public void setStudentName(String studentName) {
         this.studentName = studentName;
     }
+
     public int getTotalMarks() {
         return totalMarks;
     }
+
     public void setTotalMarks(int totalMarks) {
         this.totalMarks = totalMarks;
     }
 
     @Override
     public String toString() {
-        return "Student{ studentId="+studentId+", studentName= '"+studentName+"', totalMarks=" +totalMarks+"}";
+        return "Student{" +
+                "studentId=" + studentId +
+                ", studentName='" + studentName + '\'' +
+                ", totalMarks=" + totalMarks +
+                '}';
     }
 }
-
-
-Sample Input:
-
-4
-10
-charan
-65
-20
-kiran
-70
-30
-sameer
-76
-40
-kavya
-89
-sameer
-kiran
-75
-kavya
-
-Sample Output:
-
-Added Successfully.
-Added Successfully.
-Added Successfully.
-Added Successfully.
-Student existing.
-Updated Successfully.
-Deleted Successfully.
-charan = Student{ studentId=10, studentName= 'charan', totalMarks=65}
-kiran = Student{ studentId=20, studentName= 'kiran', totalMarks=75}
-sameer = Student{ studentId=30, studentName= 'sameer', totalMarks=76}
