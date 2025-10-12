@@ -1,0 +1,33 @@
+
+Student{ studentId=101, studentName='John Doe', totalMarks=90 }
+Student{ studentId=101, studentName='John Doe', totalMarks=90 }
+Student{ studentId=101, studentName='John Doe', totalMarks=90 }
+==================================================================
+
+Student{ studentId=101, studentName="John Doe", totalMarks=90 }
+Student{ studentId=101, studentName="John Doe", totalMarks=90 }
+Student{ studentId=101, studentName="John Doe", totalMarks=90 }
+==================================================================
+
+{ "studentId": 101, "studentName": "John Doe", "totalMarks": 90 }
+{ "studentId": 101, "studentName": "John Doe", "totalMarks": 90 }
+{ "studentId": 101, "studentName": "John Doe", "totalMarks": 90 }
+==================================================================
+
+   101, "John Doe", 90
+   101, "John Doe", 90
+   101, "John Doe", 90
+==================================================================
+
+   studetnId = 101
+   studentName = "John Doe"
+   totalMarks = 90
+
+   studetnId = 101
+   studentName = "John Doe"
+   totalMarks = 90
+
+   studetnId = 101
+   studentName = "John Doe"
+   totalMarks = 90
+==================================================================

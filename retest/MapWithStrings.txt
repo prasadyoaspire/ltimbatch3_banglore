@@ -1,0 +1,125 @@
+Library Book Information System (Using HashMap):
+
+Problem Description:
+
+You are tasked with developing a Java program to manage a collection of book titles along with their authors in a library system. Each book title must be unique, and each is associated with an author name.
+
+To store and manage the book data efficiently, the program should use a HashMap<String, String>, where:
+
+The key is the book title.
+
+The value is the author's name.
+
+The system should allow the librarian to:
+
+Add books (title + author) to the collection.
+
+Search for a book by title and display the author if found.
+
+Remove a book by title.
+
+Display the current collection before and after deletion.
+
+Input Format:
+
+The first line contains an integer n — the number of books to be added.
+
+The next n lines each contain a book's title and author separated by a comma (,)
+Example: The Alchemist,Paulo Coelho
+
+The next line contains a book title to search.
+
+The final line contains a book title to delete.
+
+🔸 Output Format:
+
+Print all books in the collection before deletion in the format:
+Title: <title>, Author: <author>
+
+Indicate whether the searched book was found or not found.
+
+Indicate whether the deletion was successful or not.
+
+Print all books after deletion.
+
+Sample Input 1:
+
+3
+The Alchemist,Paulo Coelho
+1984,George Orwell
+Moby Dick,Herman Melville
+1984
+The Alchemist
+
+Sample Output 1:
+
+Books in the Collection:
+Title: 1984, Author: George Orwell
+Title: The Alchemist, Author: Paulo Coelho
+Title: Moby Dick, Author: Herman Melville
+Book 1984 found in the Collection. Author: George Orwell
+Book The Alchemist deleted from the Collection
+Books in the Collection:
+Title: 1984, Author: George Orwell
+Title: Moby Dick, Author: Herman Melville
+
+========================================================
+Java Program
+=======================================================
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class LibraryBookMap {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        HashMap<String, String> bookMap = new HashMap<>();
+
+        // Read number of books
+        int n = Integer.parseInt(scanner.nextLine());
+
+        // Add books to the map
+        for (int i = 0; i < n; i++) {
+            String[] parts = scanner.nextLine().split(",", 2);
+            String title = parts[0].trim();
+            String author = parts[1].trim();
+            bookMap.put(title, author);
+        }
+
+        // Read title to search
+        String searchTitle = scanner.nextLine().trim();
+
+        // Read title to delete
+        String deleteTitle = scanner.nextLine().trim();
+
+        // Display all books
+        System.out.println("Books in the Collection:");
+        for (Map.Entry<String, String> entry : bookMap.entrySet()) {
+            System.out.println("Title: " + entry.getKey() + ", Author: " + entry.getValue());
+        }
+
+        // Search for a book
+        if (bookMap.containsKey(searchTitle)) {
+            System.out.println("Book " + searchTitle + " found in the Collection. Author: " + bookMap.get(searchTitle));
+        } else {
+            System.out.println("Book " + searchTitle + " not found in the Collection");
+        }
+
+        // Delete a book
+        if (bookMap.containsKey(deleteTitle)) {
+            bookMap.remove(deleteTitle);
+            System.out.println("Book " + deleteTitle + " deleted from the Collection");
+        } else {
+            System.out.println("Book " + deleteTitle + " not found in the Collection");
+        }
+
+        // Display books after deletion
+        System.out.println("Books in the Collection:");
+        for (Map.Entry<String, String> entry : bookMap.entrySet()) {
+            System.out.println("Title: " + entry.getKey() + ", Author: " + entry.getValue());
+        }
+
+        scanner.close();
+    }
+}
