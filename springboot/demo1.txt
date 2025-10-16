@@ -1,0 +1,201 @@
+package com.example.springapp.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
+public class Job {
+    @Id  
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    private int jobId;
+    private String jobTitle;
+    private int minSalary;
+    private String jobDescription;
+    private int maxSalary;
+    public int getJobId() {
+        return jobId;
+    }
+    public void setJobId(int jobId) {
+        this.jobId = jobId;
+    }
+    public String getJobTitle() {
+        return jobTitle;
+    }
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+    public int getMinSalary() {
+        return minSalary;
+    }
+    public void setMinSalary(int minSalary) {
+        this.minSalary = minSalary;
+    }
+    public String getJobDescription() {
+        return jobDescription;
+    }
+    public void setJobDescription(String jobDescription) {
+        this.jobDescription = jobDescription;
+    }
+    public int getMaxSalary() {
+        return maxSalary;
+    }
+    public void setMaxSalary(int maxSalary) {
+        this.maxSalary = maxSalary;
+    }    
+}
+
+=====================================================================================
+
+package com.example.springapp.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.springapp.model.Job;
+
+public interface JobRepo extends JpaRepository<Job,Integer> {
+    
+}
+
+=================================================================================
+
+package com.example.springapp.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.springapp.exception.JobNotFoundException;
+import com.example.springapp.model.Job;
+import com.example.springapp.repository.JobRepo;
+
+@Service
+public class JobService {
+    
+    @Autowired
+    private JobRepo jobRepo;
+
+    public Job saveJob(Job job) {
+        jobRepo.save(job);
+        return job;
+    }
+
+    public Job findJobById(int jobId) {
+        Optional<Job> optionalJob = jobRepo.findById(jobId);
+        if(optionalJob.isEmpty()) {
+           throw new JobNotFoundException("Job not found");
+        }
+       Job job =  optionalJob.get();
+       return job;
+    }
+
+    public List<Job> findAllJobs() {
+       List<Job> jobs = jobRepo.findAll();
+       return jobs;
+    }
+
+    public Job updateJob(int jobId, Job job) {
+        Optional<Job> optionalJob = jobRepo.findById(jobId);
+        if(optionalJob.isEmpty()) {
+           throw new JobNotFoundException("Job not found");
+        }
+        jobRepo.save(job);
+        return job;
+    }
+
+    public void deleteJob(int jobId) {
+        Optional<Job> optionalJob = jobRepo.findById(jobId);
+        if(optionalJob.isEmpty()) {
+           throw new JobNotFoundException("Job not found");
+        }
+        Job job = optionalJob.get();
+        jobRepo.delete(job);
+    }
+}
+
+===========================================================================================
+
+package com.example.springapp.exception;
+
+public class JobNotFoundException extends RuntimeException {
+    public JobNotFoundException(String msg) {
+        super(msg);
+    }
+}
+
+=====================================================================================
+
+package com.example.springapp.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.springapp.exception.JobNotFoundException;
+import com.example.springapp.model.Job;
+import com.example.springapp.service.JobService;
+
+@RestController
+public class JobController {
+    @Autowired
+    private JobService jobService;
+
+    @PostMapping("/api/job")
+    public ResponseEntity<Job>  addJob(@RequestBody Job job) {
+
+        
+        jobService.saveJob(job);
+        return ResponseEntity.status(201).body(job);
+    }
+
+    @GetMapping("/api/job/{jobId}")
+    public ResponseEntity<?> getJobDetails(@PathVariable int jobId) {
+        try {
+            Job job = jobService.findJobById(jobId);
+            return ResponseEntity.status(200).body(job);
+        }
+        catch(JobNotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }          
+    }
+
+    @GetMapping("/api/job") 
+    public ResponseEntity<List<Job>> getAllJobs() {
+        List<Job> jobs = jobService.findAllJobs();
+        return ResponseEntity.status(200).body(jobs);
+    }
+
+    @PutMapping("/api/job/{jobId}")
+    public ResponseEntity<?> editJob(@PathVariable int jobId, @RequestBody Job job) {
+        try {
+            jobService.updateJob(jobId, job);
+            return ResponseEntity.status(200).body(job);
+        }
+        catch(JobNotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }         
+    }
+
+    @DeleteMapping("/api/job/{jobId}")
+    public ResponseEntity<?> removeJob(@PathVariable int jobId) {
+        try {
+            jobService.deleteJob(jobId);
+            return ResponseEntity.status(200).body("Job deleted successfully");
+        }
+        catch(JobNotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        } 
+    }
+}
+
