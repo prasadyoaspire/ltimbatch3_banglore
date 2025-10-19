@@ -1,0 +1,28 @@
+import './App.css';
+import React, { useState } from 'react';
+
+function App() {
+  const [color, setColor] = useState('black');
+
+  const getRandomColor = () => {
+    const colors = ['red', 'blue', 'green', 'purple', 'orange', 'teal'];
+    return colors[Math.floor(Math.random() * colors.length)];
+  };
+
+  const handleChangeColor = () => {
+    let newColor;
+    do {
+      newColor = getRandomColor();
+    } while (newColor === color); // ensure color changes
+    setColor(newColor);
+  };
+
+  return (
+    <div>
+      <h1 style={{ color }}>Iamneo</h1>
+      <button onClick={handleChangeColor}>Change Color</button>
+    </div>
+  )
+}
+
+export default App;

@@ -1,0 +1,61 @@
+import React, { Component } from 'react';
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      query: '',
+      employees: [
+        { id: 1, name: 'John Doe' },
+        { id: 2, name: 'Jane Smith' },
+        { id: 3, name: 'Mike Johnson' },
+        { id: 4, name: 'James Brown' }
+      ],
+      filteredEmployees: []
+    };
+  }
+
+  componentDidMount() {
+    // Initialize with full employee list
+    this.setState({ filteredEmployees: this.state.employees });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.query !== this.state.query) {
+      this.filterEmployees();
+    }
+  }
+
+  handleSearch = (event) => {
+    this.setState({ query: event.target.value });
+  };
+
+  filterEmployees = () => {
+    const { employees, query } = this.state;
+    const filtered = employees.filter(emp =>
+      emp.name.toLowerCase().includes(query.toLowerCase())
+    );
+    this.setState({ filteredEmployees: filtered });
+  };
+
+  render() {
+    return (
+      <div>
+        <h1>Employee Directory</h1>
+        <input
+          type="text"
+          placeholder="Search employees..."
+          value={this.state.query}
+          onChange={this.handleSearch}
+        />
+        <ul>
+          {this.state.filteredEmployees.map(emp => (
+            <li key={emp.id}>{emp.name}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+}
+
+export default App;

@@ -1,0 +1,72 @@
+import React, { useEffect, useRef, useState } from 'react';
+
+const formatTime = (milliseconds) => {
+  const minutes = Math.floor(milliseconds / 60000);
+  const seconds = Math.floor((milliseconds % 60000) / 1000);
+  const centiseconds = Math.floor((milliseconds % 1000) / 10);
+
+  const pad = (num, size = 2) => num.toString().padStart(size, '0');
+
+  return `${pad(minutes)}:${pad(seconds)}.${pad(centiseconds)}`;
+};
+
+const Stopwatch = () => {
+  const [isRunning, setIsRunning] = useState(false);
+  const [time, setTime] = useState(0);
+  const [laps, setLaps] = useState([]);
+  const timerRef = useRef(null);
+
+  useEffect(() => {
+    if (isRunning) {
+      timerRef.current = setInterval(() => {
+        setTime((prev) => prev + 10);
+      }, 10);
+    } else {
+      clearInterval(timerRef.current);
+    }
+
+    return () => clearInterval(timerRef.current);
+  }, [isRunning]);
+
+  const handleStart = () => {
+    setIsRunning(true);
+  };
+
+  const handleStop = () => {
+    setIsRunning(false);
+  };
+
+  const handleReset = () => {
+    setIsRunning(false);
+    setTime(0);
+    setLaps([]);
+  };
+
+  const handleAddLap = () => {
+    if (isRunning) {
+      setLaps((prev) => [...prev, time]);
+    }
+  };
+
+  return (
+    <div>
+      <h1>Stopwatch</h1>
+      <h2>{formatTime(time)}</h2>
+
+      <button onClick={handleStart} disabled={isRunning}>Start</button>
+      <button onClick={handleStop} disabled={!isRunning}>Stop</button>
+      <button onClick={handleAddLap} disabled={!isRunning}>Add Lap</button>
+      <button onClick={handleReset}>Reset</button>
+
+      {laps.length > 0 && (
+        <ul>
+          {laps.map((lap, index) => (
+            <li key={index}>Lap {index + 1}: {formatTime(lap)}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
+export default Stopwatch;
