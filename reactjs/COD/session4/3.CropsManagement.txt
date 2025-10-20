@@ -1,0 +1,66 @@
+import './App.css';
+import CropDashboard from './Components/CropDashboard';
+
+function App() {
+
+  const initialCrops = [
+    { name: "Tomato", type: "Vegetables", status: "Growing" },
+    { name: "Apple", type: "Fruits", status: "Planted" },
+    { name: "Wheat", type: "Grains", status: "Harvested" },
+    { name: "Carrot", type: "Vegetables", status: "Growing" },
+    { name: "Banana", type: "Fruits", status: "Growing" }
+  ];
+
+  return (
+    <div>
+      <h1>Crop Management System</h1>
+      <CropDashboard cropsData={initialCrops} />
+    </div>
+  );
+}
+
+export default App;
+
+=========================================
+import React, { useState } from 'react';
+import CropList from './CropList';
+
+const CropDashboard = ({cropsData}) => {
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const filteredCrops = cropsData.filter(crop =>
+        crop.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    return (
+        <div>
+            <label htmlFor="search">Search by Crop Name</label>
+            <input
+                id="search"
+                type="text"
+                placeholder="Search crops"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+            />
+
+            <CropList crops={filteredCrops} />
+        </div>
+    );
+};
+
+export default CropDashboard;
+
+=============================================
+import React from 'react';
+
+const CropList = ({ crops }) => {
+    return (
+        <ul>
+            {crops.map((crop, index) => (
+                <li key={index}>{crop.name}   -Type: {crop.type} - Status: {crop.status}</li>
+            ))}
+        </ul>
+    );
+};
+
+export default CropList;
