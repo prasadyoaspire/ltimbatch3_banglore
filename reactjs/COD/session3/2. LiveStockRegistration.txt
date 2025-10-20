@@ -1,0 +1,115 @@
+import React, { useState } from 'react';
+
+const LivestockRegistrationForm = () => {
+  const [formData, setFormData] = useState({
+    species: '',
+    breed: '',
+    age: '',
+    healthStatus: ''
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.species.trim()) newErrors.species = 'Species is required';
+    if (!formData.breed.trim()) newErrors.breed = 'Breed is required';
+    if (!formData.age.trim()) newErrors.age = 'Age is required';
+    if (!formData.healthStatus.trim()) newErrors.healthStatus = 'Health status is required';
+    return newErrors;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    setErrors(prev => ({ ...prev, [name]: '' }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+    } else {
+      alert('Livestock Registered Successfully!');
+      setErrors({});
+      // Clear form (optional)
+      setFormData({
+        species: '',
+        breed: '',
+        age: '',
+        healthStatus: ''
+      });
+    }
+  };
+
+  return (
+    <div>
+      <h1>Livestock Registration Form</h1>
+      <form onSubmit={handleSubmit}>
+
+        <div>
+          <label>Species:</label><br />
+          <input
+            name="species"
+            value={formData.species}
+            onChange={handleChange}
+          />
+          {errors.species && <p>{errors.species}</p>}
+        </div>
+
+        <div>
+          <label>Breed:</label><br />
+          <input
+            name="breed"
+            value={formData.breed}
+            onChange={handleChange}
+          />
+          {errors.breed && <p>{errors.breed}</p>}
+        </div>
+
+        <div>
+          <label>Age:</label><br />
+          <input
+            name="age"
+            value={formData.age}
+            onChange={handleChange}
+          />
+          {errors.age && <p>{errors.age}</p>}
+        </div>
+
+        <div>
+          <label>Health Status:</label><br />
+          <input
+            name="healthStatus"
+            value={formData.healthStatus}
+            onChange={handleChange}
+          />
+          {errors.healthStatus && <p>{errors.healthStatus}</p>}
+        </div>
+
+        <button type="submit">Register</button>
+      </form>
+    </div>
+  );
+};
+
+export default LivestockRegistrationForm;
+
+=============================================
+
+import './App.css';
+import LivestockRegistrationForm from './Components/LivestockRegistrationForm';
+
+function App() {
+  return (
+    <div className="App">
+     <LivestockRegistrationForm/>
+    </div>
+  );
+}
+
+export default App;

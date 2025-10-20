@@ -1,0 +1,122 @@
+import React, { useState } from 'react';
+
+const BookReviewSubmissionForm = () => {
+  const [formData, setFormData] = useState({
+    bookTitle: '',
+    author: '',
+    rating: '',
+    comments: ''
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    setErrors(prev => ({
+      ...prev,
+      [name]: ''
+    }));
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.bookTitle.trim()) newErrors.bookTitle = 'Book title is required';
+    if (!formData.author.trim()) newErrors.author = 'Author is required';
+    if (!formData.rating.trim()) newErrors.rating = 'Rating is required';
+    if (!formData.comments.trim()) newErrors.comments = 'Comments are required';
+    return newErrors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+    } else {
+      // Handle successful form submission
+      alert('Review submitted!');
+      setErrors({});
+      setFormData({
+        bookTitle: '',
+        author: '',
+        rating: '',
+        comments: ''
+      });
+    }
+  };
+
+  return (
+    <div>
+      <h1>Book Review Submission Form</h1>
+      <form onSubmit={handleSubmit}>
+
+        <div>
+          <label>Book Title:</label><br />
+          <input
+            type="text"
+            name="bookTitle"
+            value={formData.bookTitle}
+            onChange={handleChange}
+          />
+          {errors.bookTitle && <p>{errors.bookTitle}</p>}
+        </div>
+
+        <div>
+          <label>Author:</label><br />
+          <input
+            type="text"
+            name="author"
+            value={formData.author}
+            onChange={handleChange}
+          />
+          {errors.author && <p>{errors.author}</p>}
+        </div>
+
+        <div>
+          <label>Rating:</label><br />
+          <input
+            type="number"
+            name="rating"
+            min="1"
+            max="5"
+            value={formData.rating}
+            onChange={handleChange}
+          />
+          {errors.rating && <p>{errors.rating}</p>}
+        </div>
+
+        <div>
+          <label>Comments:</label><br />
+          <textarea
+            name="comments"
+            value={formData.comments}
+            onChange={handleChange}
+          />
+          {errors.comments && <p>{errors.comments}</p>}
+        </div>
+
+        <button type="submit">Submit Review</button>
+      </form>
+    </div>
+  );
+};
+
+export default BookReviewSubmissionForm;
+
+========================================================
+import './App.css';
+import BookReviewSubmissionForm from './Components/BookReviewSubmissionForm';
+
+function App() {
+  return (
+    <div className="App">
+    <BookReviewSubmissionForm/>
+    </div>
+  );
+}
+
+export default App;
