@@ -1,0 +1,174 @@
+package com.examly.springapp.model;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+
+@Entity
+public class Survey {
+    @Id
+    @GeneratedValue(strategy =GenerationType.IDENTITY)
+    private Long id;
+    private String title;
+    private String description;
+
+}
+
+=======================================================
+
+package com.examly.springapp.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.examly.springapp.model.Survey;
+
+public interface SurveyRepository extends JpaRepository<Survey,Long> {
+    
+}
+
+===========================================================
+
+package com.examly.springapp.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.examly.springapp.exception.ResourceNotFoundException;
+import com.examly.springapp.model.Survey;
+import com.examly.springapp.repository.SurveyRepository;
+
+@Service
+public class SurveyService {
+
+    @Autowired
+    private SurveyRepository surveyRepository;
+
+    public Survey saveSurvey(Survey survey) {
+        return surveyRepository.save(survey);
+    }
+
+    public List<Survey> findAllSurveys() {
+        return surveyRepository.findAll();
+    }
+
+    public Survey findSurveyById(Long id) {
+        return surveyRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Survey with ID " + id + " not found."));
+    }
+
+    public Survey updateSurvey(Long id, Survey survey) {
+        findSurveyById(id);
+        survey.setId(id);
+        return surveyRepository.save(survey);
+    }
+
+    public boolean deleteSurvey(Long id) {
+        Survey survey = findSurveyById(id);
+        surveyRepository.delete(survey);
+        return true;
+    }
+
+}
+
+===============================================================================
+
+package com.examly.springapp.controller;
+
+import java.net.URI;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.examly.springapp.model.Survey;
+import com.examly.springapp.service.SurveyService;
+
+@CrossOrigin(origins ="https://8081-aadacedeea335454953bfbbaefaone.premiumproject.examly.io/")
+@RestController
+@RequestMapping("/api/surveys")
+public class SurveyController {
+
+    @Autowired
+    private SurveyService surveyService;
+
+    @PostMapping
+    public ResponseEntity<Survey> createSurvey(@RequestBody Survey survey) {
+        Survey savedSurvey = surveyService.saveSurvey(survey);
+        return ResponseEntity.status(201).body(savedSurvey);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Survey>> getAllSurveys() {
+        List<Survey> surveys = surveyService.findAllSurveys();
+        return ResponseEntity.ok(surveys);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Survey> getSurveyById(@PathVariable Long id) {
+        Survey survey = surveyService.findSurveyById(id);
+        return ResponseEntity.ok(survey);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Survey> updateSurvey(@PathVariable Long id, @RequestBody Survey updatedSurvey) {
+        Survey survey = surveyService.updateSurvey(id, updatedSurvey);
+        return ResponseEntity.ok(survey);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deleteSurvey(@PathVariable Long id) {
+        boolean isDeleted = surveyService.deleteSurvey(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(isDeleted);
+    }
+}
+
+==========================================================================
+
+package com.examly.springapp.exception;
+
+public class ResourceNotFoundException extends RuntimeException {
+    
+    public ResourceNotFoundException(String msg) {
+        super(msg);
+    }
+}
+
+****************************************************
+package com.examly.springapp.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+@ControllerAdvice
+public class GlobleExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> handleResourceNotFoundException(Exception ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+}
+
+
+======================================================================
+
