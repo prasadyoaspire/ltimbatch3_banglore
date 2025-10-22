@@ -1,0 +1,143 @@
+import React, { useEffect, useState } from 'react';
+
+const EmployeeProjectManager = () => {
+    const [projects, setProjects] = useState([]);
+    const [form, setForm] = useState({
+        projectName: '',
+        projectDescription: '',
+        startDate: '',
+        endDate: '',
+        assignedEmployee: '',
+    });
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        fetch('https://8081-aadacedeea336510666ebccddbceceabone.premiumproject.examly.io/projects')
+            .then((res) => {
+                if (!res.ok) throw new Error('Failed to fetch');
+                return res.json();
+            })
+            .then((data) => setProjects(data))
+            .catch((err) => setError(`Error: ${err.message}`));
+    }, []);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setForm((prev) => ({ ...prev, [name]: value }));
+    };
+
+
+    const handleAddProject = () => {
+        const { projectName, projectDescription, startDate, endDate, assignedEmployee } = form;
+
+
+        if (!projectName || !projectDescription || !startDate || !endDate || !assignedEmployee) {
+            return;
+        }
+
+        fetch('https://8081-aadacedeea336510666ebccddbceceabone.premiumproject.examly.io/add-project', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(form),
+        })
+            .then((res) => res.json())
+            .then((newProject) => {
+                setProjects((prev) => [...prev, newProject]);
+                setForm({
+                    projectName: '',
+                    projectDescription: '',
+                    startDate: '',
+                    endDate: '',
+                    assignedEmployee: '',
+                });
+            })
+            .catch((err) => setError(`Error: ${err.message}`));
+    };
+
+    return (
+        <div>
+            <h2>Employee Project Manager</h2>
+
+            {error && <p>{error}</p>}
+
+            <div>
+                <input
+                    name="projectName"
+                    placeholder="Enter project name"
+                    value={form.projectName}
+                    onChange={handleChange}
+                />
+                <input
+                    name="projectDescription"
+                    placeholder="Enter project description"
+                    value={form.projectDescription}
+                    onChange={handleChange}
+                />
+                <input
+                    name="startDate"
+                    data-testid="startDate"
+                    type="date"
+                    value={form.startDate}
+                    onChange={handleChange}
+                />
+                <input
+                    name="endDate"
+                    data-testid="endDate"
+                    type="date"
+                    value={form.endDate}
+                    onChange={handleChange}
+                />
+                <input
+                    name="assignedEmployee"
+                    placeholder="Enter employee name"
+                    value={form.assignedEmployee}
+                    onChange={handleChange}
+                />
+                <button onClick={handleAddProject}>Add Project</button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>Description</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Employee</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {projects.map((proj) => (
+                        <tr key={proj.id}>
+                            <td>{proj.projectName}</td>
+                            <td>{proj.projectDescription}</td>
+                            <td>{proj.startDate}</td>
+                            <td>{proj.endDate}</td>
+                            <td>{proj.assignedEmployee}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
+};
+
+export default EmployeeProjectManager;
+
+=====================================
+
+import React from 'react';
+import EmployeeProjectManager from './components/EmployeeProjectManager';
+
+class App extends React.Component {
+  render() {
+    return (
+      <div className="App">
+
+        <EmployeeProjectManager/>
+      </div>
+    );
+  }
+}
+
+export default App;
