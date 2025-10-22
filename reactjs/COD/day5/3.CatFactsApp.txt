@@ -1,0 +1,25 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+
+const CatFactsApp = () => {
+  const [fact, setFact] = useState('');
+
+  const fetchCatFact = async () => {
+    try {
+      const response = await axios.get('https://catfact.ninja/fact');
+      setFact(response.data.fact);
+    } catch (error) {    
+      setFact('Failed to fetch cat fact.');
+    }
+  };
+
+  return (
+    <div>
+      <h1>Cat Facts</h1>
+      <button onClick={fetchCatFact}>Get New Fact</button>
+      {fact && <p>{fact}</p>}
+    </div>
+  );
+};
+
+export default CatFactsApp;
