@@ -118,3 +118,14 @@ const productsData = [
 ];
 
 export default productsData;
+
+
+*******************************************
+
+
+ensures_the_correct_routes_are_rendered_on_clicking_nav_home	React Jest	NA	Failure
+checks_adds_product_1_to_cart	React Jest	NA	Failure
+checks_adds_product_3_to_cart_and_clear_cart	React Jest	NA	Failure
+
+adds_products_to_cart_and_checks_price_displays	React Jest	NA	Failure
+
