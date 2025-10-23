@@ -1,0 +1,228 @@
+import { useState } from 'react';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import HomePage from './components/HomePage';
+import DisplayStudents from './components/DisplayStudents';
+import AddStudent from './components/AddStudent';
+import Appbar from './components/Appbar';
+
+function App() {
+
+  const [refresh, setRefresh] = useState(false);
+
+  const handleRefresh = () => {
+    setRefresh(prev => !prev);
+  };
+
+  return (
+    <BrowserRouter>
+
+       <Appbar onRefresh={handleRefresh} />
+
+      <nav style={{ margin: '10px' }}>
+        <Link to="/" style={{ marginRight: '10px' }}>Home</Link>
+        <Link to="/add-student" style={{ marginRight: '10px' }}>Add Student</Link>
+        <Link to="/students">Display Students</Link>
+      </nav>
+
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/add-student" element={<AddStudent />} />
+        <Route path="/students" element={<DisplayStudents refresh={refresh} />} />
+      </Routes>
+
+    </BrowserRouter>
+  );
+}
+
+export default App;
+
+=========================================================
+
+import React from 'react';
+
+function Appbar({ onRefresh }) {
+    return (
+        <>       
+            <header style={{ backgroundColor: '#eee', padding: '10px' }}>
+                <h1>Student Dashboard</h1>
+                <button onClick={onRefresh}>Refresh</button>
+            </header>
+        </>
+    )
+}
+export default Appbar;
+
+=====================================================
+
+import React from 'react';
+import backgroundImg from '../assets/Background.jpg';
+
+function HomePage() {
+
+    return (
+        <div>        
+            <img src={backgroundImg} alt="Background" className="background-img" />         
+            <div>
+                <h1>Welcome to the Home Page</h1>
+            </div>
+        </div>
+    )
+}
+export default HomePage;
+
+========================================================
+
+import React, { useState, useEffect } from 'react';
+
+function DisplayStudents({ refresh }) {
+    const [students, setStudents] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchStudents = () => {
+        fetch("https://8080-aadacedeea336473066fedaaeefcbdbcfafaone.premiumproject.examly.io/student")
+            .then(res => res.json())
+            .then(data => {
+                setStudents(data || []);
+                setLoading(false);
+            })
+            .catch(() => {
+                setStudents([]);
+                setLoading(false);
+            });
+    }
+
+    // Fetch data on mount and whenever `refresh` changes
+    useEffect(() => {
+        setLoading(true);
+        fetchStudents();
+    }, [refresh]);
+
+    return (
+        <>
+            {
+                loading ? <p>Loading....</p>
+                    :
+                    students.length > 0 ?
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>PhoneNumber</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    students.map(stu =>
+                                        <tr key={stu.studentId}>
+                                            <td>{stu.studentId}</td>
+                                            <td>{stu.name}</td>
+                                            <td>{stu.department}</td>
+                                            <td>{stu.phoneNumber}</td>
+                                        </tr>
+                                    )
+                                }
+
+                            </tbody>
+                        </table>
+
+                        : <h3>No students found</h3>
+
+            }
+        </>
+    )
+}
+export default DisplayStudents;
+
+==================================
+
+import React from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+function AddStudent() {
+    const [formData, setFormData] = useState({
+        name: '',
+        department: '',
+        phoneNumber: ''
+    })
+    const [addStatus, setAddStatus] = useState('');
+    const [formErrors, setFormErrors] = useState({});
+    const navigate = useNavigate();
+
+    const validate = () => {
+        const errors = {};
+        if (!formData.name) {
+            errors.name = "Name is required";
+        }
+        if (!formData.department) {
+            errors.department = "Department is required";
+        }
+        if (!formData.phoneNumber) {
+            errors.phoneNumber = "PhoneNumber is required";
+        } else if (!/^[0-9]{10}$/.test(formData.phoneNumber)) {
+            errors.phoneNumber = "Phone number must be 10 digits long";
+        }
+        setFormErrors(errors);
+        return Object.keys(errors).length === 0;
+    }
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        if (validate()) {
+            fetch("https://8080-aadacedeea336473066fedaaeefcbdbcfafaone.premiumproject.examly.io/student", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error('Failed to add student');
+
+                    setAddStatus("Student added successfully.");
+
+                    setFormData({ name: '', department: '', phoneNumber: '' });
+                    setFormErrors({});
+
+                    setTimeout(() => {
+                        setAddStatus('');
+                        navigate('/students');
+                    }, 1000);
+
+                })
+                .catch(err => console.error(err));
+        }
+    };
+
+    return (
+        <>
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label htmlFor='name'>Name:</label>
+                    <input type="text" id="name" name="name" value={formData.name}
+                        onChange={event => setFormData({ ...formData, name: event.target.value })} />
+                    {formErrors.name && <p>{formErrors.name}</p>}
+                </div>
+                <div>
+                    <label htmlFor='department'>Department:</label>
+                    <input type="text" id="department" name="department" value={formData.department}
+                        onChange={event => setFormData({ ...formData, department: event.target.value })} />
+                    {formErrors.department && <p>{formErrors.department}</p>}
+                </div>
+                <div>
+                    <label htmlFor='phoneNumber'>PhoneNumber:</label>
+                    <input type="text" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber}
+                        onChange={event => setFormData({ ...formData, phoneNumber: event.target.value })} />
+                    {formErrors.phoneNumber && <p>{formErrors.phoneNumber}</p>}
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+            <h3>{addStatus && <span>{addStatus}</span>}</h3>
+        </>
+    )
+}
+export default AddStudent;
+
