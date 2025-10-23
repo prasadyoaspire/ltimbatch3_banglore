@@ -79,6 +79,13 @@ Global Exception Handling example:
 
         		return ResponseEntity.status(500).body(ex.getMessage());
     		}
+
+                //recommended to handle any other exceptions
+		@ExceptionHandler(Exception.class)
+    		public ResponseEntity<String> handleAllExceptions(Exception ex) {
+
+        		return ResponseEntity.status(500).body("An unexpected error occurred: " + ex.getMessage());
+    		}
 	}
 
 
