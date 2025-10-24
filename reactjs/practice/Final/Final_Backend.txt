@@ -1,0 +1,308 @@
+package com.examly.springapp.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
+public class Student {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int studentId;
+    private String name;
+    private String department;
+    private String phoneNumber;
+    public int getStudentId() {
+        return studentId;
+    }
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getDepartment() {
+        return department;
+    }
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+}
+
+==================================================
+
+package com.examly.springapp.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.examly.springapp.model.Student;
+
+public interface StudentRepository extends JpaRepository<Student,Integer> {
+    
+}
+
+===================================================
+
+package com.examly.springapp.exception;
+
+public class BadRequestException extends RuntimeException {
+
+    public BadRequestException(String msg) {
+        super(msg);
+    }
+}
+
+package com.examly.springapp.exception;
+
+public class StudentNotFoundException extends RuntimeException {
+
+    public StudentNotFoundException(String msg) {
+        super(msg);
+    }
+}
+
+package com.examly.springapp.exception;
+
+public class StudentSaveException extends RuntimeException {
+
+    public StudentSaveException(String msg) {
+        super(msg);
+    }
+}
+
+
+
+========================================================
+
+package com.examly.springapp.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(StudentNotFoundException.class)
+    public ResponseEntity<String> handleStudentNotFound(StudentNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<String> handleBadRequest(BadRequestException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(StudentSaveException.class)
+    public ResponseEntity<String> handleSaveException(StudentSaveException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleAllExceptions(Exception ex) {
+        ex.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                             .body("An unexpected error occurred: " + ex.getMessage());
+    }
+}
+
+============================================================================================
+
+package com.examly.springapp.service;
+
+import java.util.List;
+
+import com.examly.springapp.model.Student;
+
+public interface StudentService {
+    Student saveStudent(Student student);
+    List<Student> fetchAllStudent();
+    Student findStudentById(int id);
+    Student updateStudent(int id, Student updatedStudent);
+    void deleteStudent(int id);
+}
+
+
+package com.examly.springapp.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.examly.springapp.exception.BadRequestException;
+import com.examly.springapp.exception.StudentNotFoundException;
+import com.examly.springapp.exception.StudentSaveException;
+import com.examly.springapp.model.Student;
+import com.examly.springapp.repository.StudentRepository;
+
+@Service
+public class StudentServiceImpl implements StudentService {
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+    @Override
+    public Student saveStudent(Student student) {
+
+        if (student.getName() == null || student.getName().trim().isEmpty()) {
+            throw new BadRequestException("Student name must not be empty");
+        }
+        if (student.getDepartment() == null || student.getDepartment().trim().isEmpty()) {
+            throw new BadRequestException("Student department must not be empty");
+        }
+
+        if (student.getPhoneNumber() == null || student.getPhoneNumber().trim().isEmpty()) {
+            throw new BadRequestException("Student phoneNumber must not be empty");
+        }
+
+        try {
+            return studentRepository.save(student);
+        } catch (Exception e) {
+            throw new StudentSaveException("Failed to save student: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Student> fetchAllStudent() {
+        return studentRepository.findAll();
+    }
+
+    @Override
+    public Student findStudentById(int id) {
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + id));
+    }
+
+    @Override
+    public Student updateStudent(int id, Student updatedStudent) {
+
+        Student existingStudent = studentRepository.findById(id)
+                .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + id));
+
+        if (updatedStudent.getName() == null || updatedStudent.getName().trim().isEmpty()) {
+            throw new BadRequestException("Student name must not be empty");
+        }
+        if (updatedStudent.getDepartment() == null || updatedStudent.getDepartment().trim().isEmpty()) {
+            throw new BadRequestException("Student department must not be empty");
+        }
+
+        if (updatedStudent.getPhoneNumber() == null || updatedStudent.getPhoneNumber().trim().isEmpty()) {
+            throw new BadRequestException("Student phoneNumber must not be empty");
+        }
+
+        existingStudent.setName(updatedStudent.getName());
+        existingStudent.setDepartment(updatedStudent.getDepartment());
+        existingStudent.setPhoneNumber(updatedStudent.getPhoneNumber());
+
+        try {
+            return studentRepository.save(existingStudent);
+        } catch (Exception e) {
+            throw new StudentSaveException("Failed to update student: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteStudent(int id) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + id));
+
+        studentRepository.delete(student);
+    }
+}
+
+=======================================================
+
+package com.examly.springapp.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.examly.springapp.model.Student;
+import com.examly.springapp.service.StudentService;
+
+@RestController
+public class StudentController {
+
+    @Autowired
+    private StudentService studentService;
+
+    @PostMapping("/student")
+    public ResponseEntity<Student> addStudent(@RequestBody Student student) {
+        studentService.saveStudent(student);
+        return ResponseEntity.status(201).body(student);
+    }
+
+    @GetMapping("/student")
+    public ResponseEntity<List<Student>> getAlltudent() {
+        List<Student> students = studentService.fetchAllStudent();
+        return ResponseEntity.status(200).body(students);
+    }
+
+    @GetMapping("/student/{id}")
+    public ResponseEntity<Student> getStudentById(@PathVariable int id) {
+        Student student = studentService.findStudentById(id);
+        return ResponseEntity.status(200).body(student);
+    }
+
+    @PutMapping("/student/{id}")
+    public ResponseEntity<Student> updateStudent(@PathVariable int id, @RequestBody Student student) {
+        Student updatedStudent = studentService.updateStudent(id, student);
+        return ResponseEntity.status(200).body(updatedStudent);
+    }
+
+    @DeleteMapping("/student/{id}")
+    public ResponseEntity<String> deleteStudent(@PathVariable int id) {
+        studentService.deleteStudent(id);
+        return ResponseEntity.status(200).body("Student deleted successfully");
+    }
+}
+
+=======================================================================
+
+package com.examly.springapp.configuration;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+public class WebConfig {
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**") // Apply to all endpoints
+                        .allowedOrigins("https://8081-aadacedeea336473066fedaaeefcbdbcfafaone.premiumproject.examly.io/") // Your React dev server
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true); // If you're using cookies or sessions
+            }
+        };
+    }
+}
+
