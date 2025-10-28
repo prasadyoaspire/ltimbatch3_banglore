@@ -1,0 +1,28 @@
+1. create a folder under project root directory named as - uploads 
+
+2. In application.properties file, add this property.
+
+	file.upload-dir=uploads/
+
+
+3. When you are saving a product, coverImage field should be Base4 image format:
+
+The coverImage field is a Base64 string representing an image.
+You can generate this by converting a JPEG/PNG file to Base64 (for example, using an online tool or a command line).
+
+You can use any online tool for this conversion: 
+
+example
+
+https://www.base64.sh/image-to-base64/
+
+copy the output format and add to coverImage field.
+
+{
+  "name": "Laptop",
+  "description": "High-performance laptop for developers",
+  "price": 1200.00,
+  "coverImage": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD..." 
+}
+
+
