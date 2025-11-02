@@ -13,4 +13,6 @@ public interface ProductService {
     List<Product> getAllProductsByAdmin(int adminId);
     void deleteProduct(int productId);
     Product updateProduct(int productId, Product product);
+    List<Product> getProducts(String sortOrder, String searchValue);
+    List<Product> getProductsByUser(int userId, String searchValue);
 }

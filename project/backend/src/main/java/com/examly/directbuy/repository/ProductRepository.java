@@ -10,7 +10,15 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product,Integer>{
 
-    @Query("select p from Product p where p.user.userId = :adminId")
+    @Query("SELECT p FROM Product p WHERE p.user.userId = :adminId")
     List<Product> findAllProductsByUser(@Param("adminId") int userId);
+
+    @Query("SELECT p FROM Product p WHERE LOWER(p.productName) LIKE LOWER(CONCAT('%', :searchValue, '%'))")
+    List<Product> searchProducts(@Param("searchValue") String searchValue);
+
+    @Query("SELECT p FROM Product p WHERE p.user.userId = :userId AND " +
+            "(:searchValue IS NULL OR LOWER(p.productName) LIKE LOWER(CONCAT('%', :searchValue, '%')))")
+    List<Product> findByUserIdAndSearchValue(@Param("userId") int userId,
+                                             @Param("searchValue") String searchValue);
 
 }

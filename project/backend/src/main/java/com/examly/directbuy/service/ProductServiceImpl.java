@@ -2,6 +2,7 @@ package com.examly.directbuy.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,5 +90,28 @@ public class ProductServiceImpl implements ProductService {
         existingProduct.setCoverImage(product.getCoverImage());
         productRepository.save(existingProduct);
         return existingProduct;
+    }
+
+    @Override
+    public List<Product> getProducts(String sortOrder, String searchValue) {
+        List<Product> products;
+
+        if (searchValue != null && !searchValue.isEmpty()) {
+            products = productRepository.searchProducts(searchValue);
+        } else {
+            products = productRepository.findAll();
+        }
+
+        if ("desc".equalsIgnoreCase(sortOrder)) {
+            products.sort((p1, p2) -> p2.getProductName().compareToIgnoreCase(p1.getProductName()));
+        } else {
+            products.sort((p1, p2) -> p1.getProductName().compareToIgnoreCase(p2.getProductName()));
+        }
+        return products;
+    }
+
+    @Override
+    public List<Product> getProductsByUser(int userId, String searchValue) {
+        return productRepository.findByUserIdAndSearchValue(userId, searchValue);
     }
 }
